@@ -3,31 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Watson Assistant</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body, html {
+            width: 100%;
+            height: 100%;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
-            text-align: center;
         }
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 50px;
+
+        body {
+            overflow: hidden;
         }
-        h1 {
-            color: #333;
+
+        .WebChatContainer {
+            position: absolute;
+            width: 100%;
+            right: 0;
+            top: 5px;
+            bottom: 5px;
         }
-        p {
-            color: #666;
-            line-height: 1.6;
-        }
+
         #WACContainer.WACContainer .CardButton {
             display: block;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
@@ -70,10 +65,9 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Test Watson Assistant.</h1>
-    </div>
+    <div class="WebChatContainer"></div>
     <script>
+        const customElement = document.querySelector('.WebChatContainer');
         let webChatInstance;
         // We want to keep track of all the buttons in our last response so we can disable them if the user sends a message
         // to advance the conversation.
@@ -186,14 +180,30 @@
             // events.
             instance.on({ type: 'view:change', handler: viewChangeHandler });
 
+            instance.updateUserID("bd379110-0be0-11ef-badc-737c0b9cb6b8");
+
             await instance.render();
+
+            //Limpia la sesion actual guardada en las cookies
+            instance.destroySession()
+
+            instance.openWindow()
+
+            instance.updateHomeScreenConfig({
+                is_on: false,
+            });
         }
+        
         window.watsonAssistantChatOptions = {
-          integrationID: "0e7edc9c-daf5-415b-a4e9-788b5fad8821", // The ID of this integration.
-          region: "us-south", // The region your integration is hosted in.
-          serviceInstanceID: "84ecd0c3-9323-4281-b7a6-8e02854bbc5d", // The ID of your service instance.
-          showLauncher: true,
-          onLoad: onLoad,
+            integrationID: "7dfc82da-9cca-4b6f-b1be-e83df1c0bb9b", // The ID of this integration.
+            region: "us-south", // The region your integration is hosted in.
+            serviceInstanceID: "a77c81e7-f2fd-4043-b55b-fb9006f44739", // The ID of your service instance.
+            showLauncher: false,
+            // This is where we provide the custom element to web chat so it knows where it is supposed to be placed.
+            element: customElement,
+            hideCloseButton: false,
+            debug: false,
+            onLoad: onLoad,
         };
         setTimeout(function(){
           const t=document.createElement('script');
