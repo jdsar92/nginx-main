@@ -141,11 +141,22 @@
          * This handler is called each time a message is sent. We will use this to disable all the buttons from our last
          * response so they can't be clicked again.
          */
-        function preSendHandler() {
+        function preSendHandler(event) {
             if (currentButtons.length) {
                 currentButtons.forEach(button => (button.disabled = true));
                 currentButtons = [];
             }
+
+             // Set a skill variable to the user's name if this message is a welcome request.
+            if (event.data.history.is_welcome_request) {
+                console.log("Context is_welcome_request", event.data.context)
+
+
+                event.data.context.skills['actions skill'] = event.data.context.skills['actions skill'] || {};
+                event.data.context.skills['actions skill'].skill_variables = event.data.context.skills['actions skill'].skill_variables || {};
+                event.data.context.skills['actions skill'].skill_variables.flujo = 'MLCR';
+            }
+
             hasSentMessage = true;
         }
 
